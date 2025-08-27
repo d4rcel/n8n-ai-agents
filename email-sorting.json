@@ -1,0 +1,204 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -432,
+        -32
+      ],
+      "id": "9de161ef-8ea3-4d7e-9c50-ae7b247bf2a8",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "E86amFP0NmtNnusq",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Basé sur le contenu de l'email ci-dessous, retourne moi le nom d'un tag que tu donnerais pour catégoriser cet e-mail.\n\nTu dois absolument choisir entre ces 4 tags. Si aucun tag ne te semble correspondre, retourne le tag \"Other\".\n\n-Newsletter\n-Promotion\n-Business\n-Spam\n\nRépond uniquement avec le nom du tag et rien d'autre.\n\nVoici le contenu de l'email :\n{{ $json.data }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        16,
+        -32
+      ],
+      "id": "1f97c8c6-7d47-4600-a883-c5ca763175ae",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        96,
+        192
+      ],
+      "id": "b5fa778e-596f-4978-8b53-ee7ffaf82ae5",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "4tLb0AeShcIjWKWq",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "dataPropertyName": "html",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "data",
+              "cssSelector": "body",
+              "skipSelectors": "a,img"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        -208,
+        -32
+      ],
+      "id": "c223a269-0cf1-4ddc-83a6-a33309af0c22",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "05lIRc1a98YmUlBj",
+          "mode": "list",
+          "cachedResultName": "Get or Create Email Label"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        368,
+        -32
+      ],
+      "id": "4c9a3829-4c55-4d49-aefc-620af1bd6570",
+      "name": "Execute Workflow"
+    },
+    {
+      "parameters": {
+        "resource": "thread",
+        "operation": "addLabels",
+        "threadId": "={{ $('Gmail Trigger').item.json.threadId }}",
+        "labelIds": "={{ $json.id }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        592,
+        -32
+      ],
+      "id": "f9a64f36-8253-4545-8f42-376f80ba4355",
+      "name": "Add label to thread",
+      "webhookId": "94c77333-f4c5-4f2c-85cc-7c8105b334e3",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "E86amFP0NmtNnusq",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow": {
+      "main": [
+        [
+          {
+            "node": "Add label to thread",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "58643122e41caa8c7a29bfb0eef9aa6baf21d382a0677dfb6fb553a802e232c8"
+  }
+}

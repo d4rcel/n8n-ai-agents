@@ -1,0 +1,399 @@
+{
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e2fe8ec1-788d-4fc7-8193-6d2d064485e4",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        352,
+        208
+      ],
+      "id": "70af319a-b4c8-4de0-ab07-57cbfe236268",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "4tLb0AeShcIjWKWq",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"introduction\": \"Introduction personnalisée mentionnant le client et ses besoins spécifiques...\",\n  \"comprehension\": \"Démonstration de notre compréhension du projet et des défis du secteur...\",\n  \"approche\": \"Notre approche unique pour ce projet spécifique...\",\n  \"services\": [\n    {\n      \"nom\": \"Nom du service 1\",\n      \"description\": \"Description personnalisée...\",\n      \"livrables\": \"Liste des livrables...\",\n      \"avantages\": \"Avantages spécifiques pour ce client...\"\n    },\n    {\n      \"nom\": \"Nom du service 2\",\n      \"description\": \"...\",\n      \"livrables\": \"...\",\n      \"avantages\": \"...\"\n    }\n  ],\n  \"processus\": \"Description du processus de travail et des étapes...\",\n  \"timeline\": \"Planification de planning adaptée au délai demandé...\",\n  \"investissement\": \"Fourchette de prix stratégiquement formulée basée sur le budget mentionné...\",\n  \"conclusion\": \"Conclusion convaincante adaptée aux objectifs du client...\"\n\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        560,
+        208
+      ],
+      "id": "18107050-0ca3-430b-8950-98f7743dd014",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "1FARnkpdMwxgfuSo_o1-Xngr7viqNerXHm2PJRFxhRug",
+          "mode": "list",
+          "cachedResultName": "Modèle Proposition Commerciale",
+          "cachedResultUrl": "https://docs.google.com/document/d/1FARnkpdMwxgfuSo_o1-Xngr7viqNerXHm2PJRFxhRug/edit?usp=drivesdk"
+        },
+        "name": "=Propal -  {{ $('Récupérer données client').item.json.Entreprise }} - {{ $now.toFormat(\"dd-MM-yyyy\") }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1376,
+        0
+      ],
+      "id": "2f1bd175-307a-487c-b39c-9d23b1284b48",
+      "name": "Copy file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "hpETuJBpo14hjkwu",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1Ag4HyOwJkT7lkg69xreGLwD8Z2mn-tth3WP6KRzf0E0",
+          "mode": "list",
+          "cachedResultName": " Propal Commerce",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Ag4HyOwJkT7lkg69xreGLwD8Z2mn-tth3WP6KRzf0E0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Ag4HyOwJkT7lkg69xreGLwD8Z2mn-tth3WP6KRzf0E0/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e7b5588d-d982-4ff6-95ee-9ee73186cf2e",
+      "name": "Récupérer données client",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "boWr3BMBvz7JErfg",
+          "name": "darcelabim@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Veuillez générer une proposition personnalisée:\n\nVeuillez structurer votre réponse en sections JSON clairement délimitées:\n\n{\n  \"introduction\": \"Introduction personnalisée mentionnant le client et ses besoins spécifiques...\",\n  \"comprehension\": \"Démonstration de notre compréhension du projet et des défis du secteur...\",\n  \"approche\": \"Notre approche unique pour ce projet spécifique...\",\n  \"services\": [\n    {\n      \"nom\": \"Nom du service 1\",\n      \"description\": \"Description personnalisée...\",\n      \"livrables\": \"Liste des livrables...\",\n      \"avantages\": \"Avantages spécifiques pour ce client...\"\n    },\n    {\n      \"nom\": \"Nom du service 2\",\n      \"description\": \"...\",\n      \"livrables\": \"...\",\n      \"avantages\": \"...\"\n    }\n  ],\n  \"processus\": \"Description du processus de travail et des étapes...\",\n  \"timeline\": \"Planification de planning adaptée au délai demandé...\",\n  \"investissement\": \"Fourchette de prix stratégiquement formulée basée sur le budget mentionné...\",\n  \"conclusion\": \"Conclusion convaincante adaptée aux objectifs du client...\"\n\n}\n\nAssurez-vous que chaque section soit hautement personnalisée aux besoins spécifiques du client, au secteur d'activité et aux objectifs mentionnés. Utilisez un ton professionnel mais chaleureux qui reflète l'expertise de l'agence tout en établissant une connexion humaine.",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Vous êtes un expert en rédaction de proposition commerciale pour une agence créative digitale de premier plan"
+            },
+            {
+              "type": "HumanMessagePromptTemplate",
+              "message": "=Client: Anne Sophie de EcoloDins\nSecteur: Environnement\nServices demandés: Site web, identité visuelle\nBudget approximatif: 15000€\nDélai souhaité (en nombre de jours) : 60\nObjectifs principaux: Refonte complète de l'identité pour mieux communiquer\nPoints spécifiques: Souhaite un design épuré"
+            },
+            {
+              "type": "AIMessagePromptTemplate",
+              "message": "={\n      \"introduction\": \"Chère Anne Sophie, chez [Nom de l'agence], nous sommes ravis de l'opportunité de collaborer avec EcoloDins, une entité dont la mission environnementale résonne profondément avec nos valeurs. Nous avons attentivement pris note de votre besoin de refonte complète de votre identité visuelle et de la création d'un site web, avec un objectif clair : mieux communiquer votre engagement et vos actions. Votre désir d'un design épuré est une direction que nous partageons pleinement, synonyme d'efficacité et de clarté dans le message.\",\n      \"comprehension\": \"Le secteur de l'environnement est en constante évolution, exigeant une communication non seulement claire et percutante, mais aussi inspirante et crédible. EcoloDins a besoin d'une identité qui incarne la pureté et l'impact de sa mission, et d'une plateforme digitale qui serve de pilier à cette communication. Nous comprenons que la refonte de votre identité ne se limite pas à une esthétique nouvelle, mais vise à renforcer votre message, à engager votre audience et à amplifier votre influence. Le défi est de traduire la complexité des enjeux environnementaux en un langage visuel simple, élégant et mémorable, qui incite à l'action et à la confiance.\",\n      \"approche\": \"Notre approche est centrée sur l'authenticité et l'impact. Pour EcoloDins, nous proposerons une démarche collaborative et itérative, débutant par une immersion profonde dans votre mission, vos valeurs et votre audience. Nous allons concevoir une identité visuelle qui reflète la sérénité et la force de la nature, tout en étant contemporaine et facilement identifiable. Le design épuré sera notre fil conducteur, garantissant que chaque élément visuel et chaque interaction sur le site web servent directement votre objectif de meilleure communication. Nous ne nous contenterons pas de créer de beaux visuels ; nous construirons une expérience de marque cohérente et significative qui amplifie la portée d'EcoloDins.\",\n      \"services\": [\n        {\n          \"nom\": \"Refonte Stratégique de l'Identité Visuelle d'EcoloDins\",\n          \"description\": \"Nous allons concevoir une identité visuelle complète et épurée, qui incarne la mission d'EcoloDins avec clarté et distinction. L'objectif est de créer une image de marque mémorable, moderne et professionnelle, qui communique efficacement votre engagement environnemental et inspire confiance. Nous mettrons l'accent sur la simplicité élégante pour une reconnaissance instantanée.\",\n          \"livrables\": \"Création de logotype principal et de ses déclinaisons, définition d'une charte graphique complète (couleurs, typographies, iconographie, principes d'utilisation), conception de modèles de papeterie et de supports de communication clés (cartes de visite, signatures email, etc.), guide d'utilisation de la marque.\",\n          \"avantages\": \"Une image de marque renouvelée, forte et cohérente qui renforce votre crédibilité et votre professionnalisme. Une communication visuelle plus claire et plus impactante qui facilite la compréhension de votre mission et attire de nouveaux soutiens. Une identité distinctive qui vous démarque dans le secteur environnemental.\"\n        },\n        {\n          \"nom\": \"Conception et Développement du Site Web Épuré et Engageant d'EcoloDins\",\n          \"description\": \"Nous développerons un site web moderne, intuitif et performant, conçu pour être le point central de votre communication. En adoptant une approche de design épuré, le site mettra en valeur votre contenu, facilitera la navigation et optimisera l'expérience utilisateur, tout en étant optimisé pour les performances et le référencement naturel. L'objectif est de transformer les visiteurs en ambassadeurs de votre cause.\",\n          \"livrables\": \"Conception UX/UI (wireframes, maquettes interactives), développement front-end et back-end sur une plateforme CMS robuste (ex: WordPress avec Gutenberg), intégration de contenu optimisé, optimisation technique SEO de base, compatibilité mobile (responsive design), formation à l'utilisation du CMS, tests de performance et de sécurité.\",\n          \"avantages\": \"Une présence digitale professionnelle et impactante qui renforce votre visibilité et votre crédibilité. Une plateforme intuitive qui facilite l'accès à l'information et encourage l'engagement de votre audience. Un outil puissant pour mieux communiquer vos actions, vos projets et vos valeurs, générant ainsi plus de soutien et de participation.\"\n        }\n      ],\n      \"processus\": \"Notre processus est structuré pour garantir l'efficacité, la transparence et l'atteinte de vos objectifs. Il se déroule en plusieurs phases clés : 1. **Découverte & Stratégie :** Ateliers approfondis pour affiner votre vision, vos objectifs et votre audience cible. 2. **Conception & Création :** Développement de l'identité visuelle (concepts, itérations) et des maquettes du site web (UX/UI). 3. **Développement Technique :** Codage et intégration du site web, avec des points de validation réguliers. 4. **Contenu & SEO :** Intégration et optimisation du contenu pour le référencement naturel. 5. **Tests & Lancement :** Validation finale, corrections et déploiement. 6. **Suivi & Optimisation :** Accompagnement post-lancement et recommandations pour l'évolution.\",\n      \"timeline\": \"Conscients de votre délai souhaité de 60 jours (environ 8 semaines), nous avons optimisé notre processus pour une livraison efficace et de haute qualité. Voici une estimation de notre planning : *   **Jours 1-10 :** Phase de Découverte & Stratégie (Identité & Site). *   **Jours 11-25 :** Conception de l'Identité Visuelle (Design du logo, charte graphique & premières maquettes du site). *   **Jours 26-45 :** Développement du Site Web (Intégration des maquettes, fonctionnalités). *   **Jours 46-55 :** Intégration du Contenu, Optimisation SEO & Tests. *   **Jours 56-60 :** Révisions Finales, Formation & Lancement. Ce calendrier est optimisé pour respecter votre échéance tout en garantissant un travail de qualité supérieure.\",\n      \"investissement\": \"Pour la refonte complète de votre identité visuelle et la création d'un site web sur mesure, conçu pour être épuré, impactant et optimisé pour la communication de votre mission, notre investissement estimatif se situe dans une fourchette de **14 000 € à 17 000 € HT**. Ce budget comprend l'ensemble des services décrits, incluant la recherche stratégique, le design créatif, le développement technique, l'optimisation et la gestion de projet. Cette fourchette sera affinée après une discussion plus approfondie de vos besoins spécifiques et des fonctionnalités précises du site, assurant un retour sur investissement maximal pour EcoloDins.\",\n      \"conclusion\": \"Anne Sophie, investir dans une identité visuelle forte et un site web performant est essentiel pour EcoloDins afin de mieux communiquer votre mission environnementale et d'amplifier votre impact. Notre agence est prête à transformer votre vision en une réalité digitale et visuelle qui non seulement capture l'essence de votre engagement, mais inspire aussi votre audience à agir. Nous sommes convaincus que notre expertise en design épuré et notre compréhension de votre secteur feront de ce projet un succès retentissant. Nous serions ravis de discuter plus en détail de cette proposition et d'explorer comment nous pouvons donner vie à la nouvelle ère d'EcoloDins. Ensemble, créons un avenir plus vert, avec une communication plus claire et plus puissante.\"\n    }"
+            },
+            {
+              "type": "HumanMessagePromptTemplate",
+              "message": "=Voici le client pour lequel vous devez générez la proposition commerciale:\n\nClient: {{ $json['Nom client'] }} de {{ $json.Entreprise }}\nSecteur: {{ $json.Secteur }}\nServices demandés: {{ $json['Services demandés'] }}\nBudget approximatif: {{ $json.Budjet }}\nDélai souhaité: {{ $json['Délai (jours)'] }}\nObjectifs principaux: {{ $json['Objectifs principaux'] }}\nPoints spécifiques: {{ $json['Projets spécifiques'] }}"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        416,
+        0
+      ],
+      "id": "6238535a-8f29-4bf8-bfad-b90841d1020c",
+      "name": "Génération données propal"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output.services",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        768,
+        0
+      ],
+      "id": "ddb33aae-7d22-4e1f-a274-ea1ecf1b42ef",
+      "name": "Split services"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7c12a7bb-4c5d-49cb-8652-4090bf7ae28e",
+              "name": "Service",
+              "value": "={{ $json.nom }}\nDescription: {{ $json.description }}\nLivrables: {{ $json.livrables }}\nAvantages: {{ $json.avantages }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        976,
+        0
+      ],
+      "id": "ef37cadf-95e8-4d91-a90d-5accccc85dc2",
+      "name": "Texte Service"
+    },
+    {
+      "parameters": {
+        "fieldsToSummarize": {
+          "values": [
+            {
+              "aggregation": "concatenate",
+              "field": "Service",
+              "separateBy": "\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.summarize",
+      "typeVersion": 1.1,
+      "position": [
+        1184,
+        0
+      ],
+      "id": "a54ad680-2811-45ff-9e0a-31cb9a8efc22",
+      "name": "Création Doc à partir du modèle"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "replaceAll",
+              "text": "{{Nom client}}",
+              "replaceText": "={{ $('Récupérer données client').item.json['Nom client'] }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{Entreprise}}",
+              "replaceText": "={{ $('Récupérer données client').item.json.Entreprise }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{introduction}}",
+              "replaceText": "={{ $('Génération données propal').item.json.output.introduction }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{comprehension}}",
+              "replaceText": "={{ $('Génération données propal').item.json.output.comprehension }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{approche}}",
+              "replaceText": "={{ $('Génération données propal').item.json.output.approche }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{processus}}",
+              "replaceText": "={{ $('Génération données propal').item.json.output.processus }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{timeline}}",
+              "replaceText": "={{ $('Génération données propal').item.json.output.timeline }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{investissement}}",
+              "replaceText": "={{ $('Génération données propal').item.json.output.investissement }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{conclusion}}",
+              "replaceText": "={{ $('Génération données propal').item.json.output.conclusion }}"
+            },
+            {
+              "action": "replaceAll",
+              "text": "{{livrables}}",
+              "replaceText": "={{ $('Création Doc à partir du modèle').item.json.concatenated_Service }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        1632,
+        0
+      ],
+      "id": "ab8aa5f3-cfdf-4047-901e-5fd03a51bef6",
+      "name": "Propal final",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "ULR3E3GWCwN1v6bZ",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Propal Commerciale verion 1",
+        "height": 672,
+        "width": 1952
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        -192
+      ],
+      "id": "1f2c61ae-01a9-496e-a850-12508c6f4e39",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Récupérer données client",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Génération données propal",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Génération données propal",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy file": {
+      "main": [
+        [
+          {
+            "node": "Propal final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Récupérer données client": {
+      "main": [
+        [
+          {
+            "node": "Génération données propal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Génération données propal": {
+      "main": [
+        [
+          {
+            "node": "Split services",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split services": {
+      "main": [
+        [
+          {
+            "node": "Texte Service",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texte Service": {
+      "main": [
+        [
+          {
+            "node": "Création Doc à partir du modèle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Création Doc à partir du modèle": {
+      "main": [
+        [
+          {
+            "node": "Copy file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "58643122e41caa8c7a29bfb0eef9aa6baf21d382a0677dfb6fb553a802e232c8"
+  }
+}
